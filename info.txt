@@ -1,0 +1,12 @@
+1: Build Docker Image
+docker build -t zee770/py-flask-test:0.0.2.RELEASE .
+docker build -t zee770/py-flask-test .
+2: Run Docker Image
+docker run  python-imagename
+docker container run -d -p 3000:3000 zee770/py-flask-test
+3:check docker continer running
+docker container ls
+4:stop docker continer
+docker container stop a6c //first 3 or 4 letter
+5: Dovcker puch to repository 
+docker push  zee770/py-flask-test:0.0.2.RELEASE

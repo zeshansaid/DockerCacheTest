@@ -1,0 +1,72 @@
+steps:
+  # Step 1: Checkout the code from GitHub
+  - name: 'gcr.io/cloud-builders/git'
+    args: ['clone', 'https://github.com/zeshansaid/MagicAi']
+  
+  # Step 2: Change directory to the repository
+  - name: 'gcr.io/cloud-builders/docker'
+  # your-repo-directory
+    dir: 'MagicAi' 
+    args: [
+            'build',
+            '-t',
+            'gcr.io/stone-composite-436518-s3/magic-ai',
+            '.'
+          ]
+
+  
+  # Step 3: Push the Docker image to Google Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    dir: 'magic-ai'
+    args: ['push', 'gcr.io/stone-composite-436518-s3/magic-ai']
+
+  
+  
+  # Step 4: Deploy the Docker image to Google Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args:
+      - 'gcloud'
+      - 'run'
+      - 'deploy'
+      - 'magic-ai'
+      - '--image'
+      - 'gcr.io/stone-composite-436518-s3/magic-ai'
+      - '--platform'
+      - 'managed'
+      - '--region'
+      - 'us-central1'
+      - '--allow-unauthenticated'
+      - '--quiet'
+    timeout: 3600s
+ 
+# Store images in Google Artifact Registry 
+# images: ['gcr.io/stone-composite-436518-s3/MagicAi:latest']
+timeout: '3600s'  # Adjust timeout as necessary
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+
+
+
+# 
+# steps:
+#   - name: gcr.io/cloud-builders/docker
+#     entrypoint: bash
+#     args:
+#       - -c
+#       - docker pull us-west1-docker.pkg.dev/$PROJECT_ID/depot-demo/demo:latest || exit 0
+ 
+#   - name: gcr.io/cloud-builders/docker
+#     args:
+#       - build
+#       - -t
+#       - us-west1-docker.pkg.dev/$PROJECT_ID/depot-demo/demo:$COMMIT_SHA
+#       - -t
+#       - us-west1-docker.pkg.dev/$PROJECT_ID/depot-demo/demo:latest
+#       - --cache-from
+#       - us-west1-docker.pkg.dev/$PROJECT_ID/depot-demo/demo:latest
+#       - .
+ 
+# images:
+#   - us-west1-docker.pkg.dev/$PROJECT_ID/depot-demo/demo:$COMMIT_SHA
+#   - us-west1-docker.pkg.dev/$PROJECT_ID/depot-demo/demo:latest
