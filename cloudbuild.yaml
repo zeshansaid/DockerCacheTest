@@ -10,7 +10,7 @@ steps:
     args:
           - build
           - -t
-          - gcr.io/stone-composite-436518-s3/docker-cache:$COMMIT_SHA
+          - gcr.io/stone-composite-436518-s3/docker-cache
           - -t
           - gcr.io/stone-composite-436518-s3/docker-cache
           - .
