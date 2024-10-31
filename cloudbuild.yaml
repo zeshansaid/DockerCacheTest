@@ -7,13 +7,17 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
   # your-repo-directory
     dir: 'DockerCacheTest'
-    args:
-          - build
-          - -t
-          - gcr.io/stone-composite-436518-s3/docker-cache:$COMMIT_SHA
-          - -t
-          - gcr.io/stone-composite-436518-s3/docker-cache:latest
-          - .
+    args: [
+          'build',
+          '-t',
+          'gcr.io/stone-composite-436518-s3/docker-cache:${SHORT_SHA}',
+          '-t',
+          'gcr.io/stone-composite-436518-s3/docker-cache:latest',
+          '--cache-from',
+          'gcr.io/stone-composite-436518-s3/docker-cache:latest',
+          '.'
+          ]
+          
 
 
   # Step 3: Push the Docker image to Google Container Registry
@@ -43,7 +47,7 @@ steps:
 # Store images in Google Artifact Registry 
 
 images:
-  - gcr.io/stone-composite-436518-s3/docker-cache:$COMMIT_SHA
+  - gcr.io/stone-composite-436518-s3/docker-cache:${SHORT_SHA}
   - gcr.io/stone-composite-436518-s3/docker-cache:latest
 timeout: '3600s'  # Adjust timeout as necessary
 options:
