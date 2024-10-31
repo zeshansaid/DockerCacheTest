@@ -14,6 +14,7 @@ COPY requirements.txt requirements.txt
 RUN  pip install -r requirements.txt
 # RUN --mount=type=cache,target=/root/.cache/pip pip install --timeout 300 -r requirements.txt
 # Copy local code to the container image.
+ENV PORT=8080
 ENV APP_HOME=/app
 WORKDIR $APP_HOME
 COPY . .
