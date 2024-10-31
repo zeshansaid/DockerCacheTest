@@ -1,24 +1,27 @@
 steps:
   # Step 1: Checkout the code from GitHub
   - name: 'gcr.io/cloud-builders/git'
-    args: ['clone', 'https://github.com/zeshansaid/MagicAi']
+    args: ['clone', 'https://github.com/zeshansaid/DockerCacheTest']
   
   # Step 2: Change directory to the repository
   - name: 'gcr.io/cloud-builders/docker'
   # your-repo-directory
-    dir: 'MagicAi' 
-    args: [
-            'build',
-            '-t',
-            'gcr.io/stone-composite-436518-s3/magic-ai',
-            '.'
-          ]
+    dir: 'DockerCacheTest'
+    args:
+          - build
+          - -t
+          - gcr.io/stone-composite-436518-s3/docker-cache:$COMMIT_SHA
+          - -t
+          - gcr.io/stone-composite-436518-s3/docker-cache:latest
+          - --cache-from
+          - gcr.io/stone-composite-436518-s3/docker-cache:latest
+          - .
 
-  
+
   # Step 3: Push the Docker image to Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    dir: 'magic-ai'
-    args: ['push', 'gcr.io/stone-composite-436518-s3/magic-ai']
+    dir: 'docker-cache'
+    args: ['push', 'gcr.io/stone-composite-436518-s3/docker-cache']
 
   
   
@@ -28,9 +31,9 @@ steps:
       - 'gcloud'
       - 'run'
       - 'deploy'
-      - 'magic-ai'
+      - 'docker-cache'
       - '--image'
-      - 'gcr.io/stone-composite-436518-s3/magic-ai'
+      - 'gcr.io/stone-composite-436518-s3/docker-cache'
       - '--platform'
       - 'managed'
       - '--region'
@@ -41,6 +44,9 @@ steps:
  
 # Store images in Google Artifact Registry 
 # images: ['gcr.io/stone-composite-436518-s3/MagicAi:latest']
+images:
+  - gcr.io/stone-composite-436518-s3/docker-cache:latest:$COMMIT_SHA
+  - gcr.io/stone-composite-436518-s3/docker-cache:latest
 timeout: '3600s'  # Adjust timeout as necessary
 options:
   logging: CLOUD_LOGGING_ONLY
