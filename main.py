@@ -10,6 +10,10 @@ app.app_context().push()
 def say_hello():
     return jsonify({"api": "online"})
 
+@app.route("/test", methods=["GET"])
+def test():
+    return jsonify({"test": "success"})
+
 
  
 if __name__ == '__main__':
